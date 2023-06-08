@@ -53,26 +53,6 @@ begin
 
   commit;
 
-  -- listen for response
-  l_dequeue_options.correlation  := l_session_id;
-  l_dequeue_options.wait         := 15;
-  l_dequeue_options.navigation   := dbms_aq.first_message;
-  l_dequeue_options.dequeue_mode := dbms_aq.remove;
-
-  dbms_aq.dequeue(
-    queue_name         => 'blob_issue.attachment',
-    message_properties => l_dequeue_message_properties,
-    dequeue_options    => l_dequeue_options,
-    payload            => l_res,
-    msgid              => l_msgid
-  );
-
-  commit;
-
-  out_status  := l_res.status;
-  out_message := l_res.message;
-  out_file_id := l_res.file_id;
-
 exception
   when others then
     out_status  := 'ERROR';
